@@ -1,0 +1,76 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+.container {
+  display: flex;
+  justify-content: center;
+
+  height: 100%;
+  width: 100%;
+}
+.calendar {
+  padding-top: 20vh;
+  height: 50vh;
+  width: 90vh;
+  display: flex;
+  justify-content: center;
+}
+.calendar .left,
+.calendar .right {
+  width: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.calendar .btnLeft,
+.calendar .btnRight {
+  width: 90%;
+  height: 20%;
+  font-size: 200%;
+  border-radius: 20%;
+  border: 0;
+  background-color: rgb(237, 238, 240);
+  margin: 10vh;
+}
+.calendar .center {
+  border: 1px solid green;
+  display: flex;
+  width: 60vh;
+  flex-direction: column;
+}
+.calendar .dayLine {
+  border: 1px solid black;
+  height: 15%;
+  background-color: rgb(208, 205, 230);
+
+  display: flex;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
+.calendar .firstLine,
+.calendar .secondLine,
+.calendar .thirdLine,
+.calendar .fourthLine,
+.calendar .fifthLine {
+  border: 1px solid black;
+  height: 17%;
+
+  display: flex;
+}
+
+.calendar .sun,
+.calendar .mon,
+.calendar .tue,
+.calendar .wed,
+.calendar .thu,
+.calendar .fri,
+.calendar .sat {
+  flex: 1;
+  border: 1px solid black;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
