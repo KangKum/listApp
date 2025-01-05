@@ -17,6 +17,13 @@ body {
   display: flex;
   justify-content: center;
 }
+.calendar .yearAndMonth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
 .calendar .left,
 .calendar .right {
   width: 10vh;
@@ -33,16 +40,19 @@ body {
   border: 0;
   background-color: rgb(237, 238, 240);
   margin: 10vh;
+  cursor: pointer;
 }
 .calendar .center {
-  border: 1px solid green;
   display: flex;
   width: 60vh;
   flex-direction: column;
 }
+.calendar .yearAndMonth {
+  height: 10%;
+}
 .calendar .dayLine {
   border: 1px solid black;
-  height: 15%;
+  height: 10%;
   background-color: rgb(208, 205, 230);
 
   display: flex;
@@ -53,11 +63,13 @@ body {
 .calendar .secondLine,
 .calendar .thirdLine,
 .calendar .fourthLine,
-.calendar .fifthLine {
+.calendar .fifthLine,
+.calendar .sixthLine {
   border: 1px solid black;
   height: 17%;
 
   display: flex;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .calendar .sun,
@@ -73,4 +85,13 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.calendar .dayBlank:hover {
+  background-color: rgb(208, 205, 230, 0.4);
+  cursor: default;
+}
+
+.today {
+  background-color: rgb(208, 205, 230, 0.4);
 }

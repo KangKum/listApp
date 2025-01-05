@@ -1,55 +1,84 @@
-// Today Date
-const today = new Date();
-let thisYear = today.getFullYear(); //연도
-let thisMonth = today.getMonth() + 1; //월
-let thisDay = today.getDate(); //일
-let day = today.getDay(); //요일
-const week = ["SUN", "MON", "TUE", "WED", "THR", "FRI", "SAT"];
+//// YEAR AND MONTH
+let year = new Date().getFullYear();
+let month = new Date().getMonth() + 1;
 
-// FIND FIRST DAY
-let firstDate;
-let firstDay;
-function calculateFirstday() {
-  while (thisDay !== 1) {
-    if (day >= 0) {
-      day--;
+// DEFAULT SETTING
+function setCalendar(yy, mm) {
+  const yearAndMonth = document.querySelector(".yearAndMonth");
+  yearAndMonth.innerText = yy + "년 " + mm + "월";
+}
+setCalendar(year, month);
+colorToday();
+setDays();
+
+//// COLOR TODAY
+function colorToday() {
+  const today = new Date();
+  if (year === today.getFullYear() && month === today.getMonth() + 1) {
+    document.querySelectorAll(".dayBlank")[new Date(year, month - 1, 1).getDay() + today.getDate() - 1].classList.add("today");
+  } else {
+    document.querySelectorAll(".dayBlank").forEach((blank) => {
+      blank.classList.remove("today");
+    });
+  }
+}
+
+//// DAY
+function setDays() {
+  //입력된 날짜 초기화
+  document.querySelectorAll(".dayBlank").forEach((blank) => {
+    blank.innerText = "";
+  });
+
+  //당월 일수 찾기
+  let numOfDays;
+  if (month === 1 || month === 3 || month === 5 || month === 7 || month === 8 || month === 10 || month === 12) {
+    numOfDays = 31;
+  } else if (month === 4 || month === 6 || month === 9 || month === 11) {
+    numOfDays = 30;
+  } else {
+    if (year % 4 === 0) {
+      numOfDays = 29;
     } else {
-      day += 7;
+      numOfDays = 28;
     }
-    thisDay--;
   }
-  console.log("요일: " + week[day], "일: " + thisDay);
-  firstDate = thisDay;
-  firstDay = day;
-}
 
-calculateFirstday();
+  // 당월 첫째날 찾기
+  let firstDay = new Date(year, month - 1, 1).getDay();
 
-// SET CALENDAR
-const calendar = document.querySelector(".calendar");
-const firstLine = calendar.querySelector(".firstLine");
-const secondLine = calendar.querySelector(".secondLine");
-const thirdLine = calendar.querySelector(".thirdLine");
-const fourthLine = calendar.querySelector(".fourthLine");
-const fifthLine = calendar.querySelector(".fifthLine");
-function setFirstDate() {
-  if (day === 0) {
-    firstLine.querySelector(".sun").innerText = thisDay;
-  } else if (day === 1) {
-    firstLine.querySelector(".mon").innerText = thisDay;
-  } else if (day === 2) {
-    firstLine.querySelector(".tue").innerText = thisDay;
-  } else if (day === 3) {
-    firstLine.querySelector(".wed").innerText = thisDay;
-  } else if (day === 4) {
-    firstLine.querySelector(".thu").innerText = thisDay;
-  } else if (day === 5) {
-    firstLine.querySelector(".fri").innerText = thisDay;
-  } else if (day === 6) {
-    firstLine.querySelector(".sat").innerText = thisDay;
+  // 입력하기
+  let i = 0;
+  while (i < numOfDays) {
+    document.querySelectorAll(".dayBlank")[firstDay + i].innerText = i + 1;
+    i++;
   }
 }
 
-setFirstDate();
-
-function setOtherDate() {}
+//// CHANGE MONTH
+const btnRight = document.querySelector(".btnRight");
+const btnLeft = document.querySelector(".btnLeft");
+btnRight.addEventListener("click", nextMonth);
+btnLeft.addEventListener("click", previousMonth);
+function nextMonth() {
+  if (month < 12) {
+    month++;
+  } else {
+    month = 1;
+    year++;
+  }
+  setCalendar(year, month);
+  setDays();
+  colorToday();
+}
+function previousMonth() {
+  if (month > 1) {
+    month--;
+  } else {
+    month = 12;
+    year--;
+  }
+  setCalendar(year, month);
+  setDays();
+  colorToday();
+}
