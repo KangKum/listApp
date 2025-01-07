@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    1. 달력에 동그라미표시 2.화면 핸드폰에맞게 3. 핸드폰에서 사용할수있게
     <div class="container">
       <div class="calendar">
         <div class="left">
@@ -90,14 +91,13 @@
           <div class="listDate"></div>
           <div class="btnListRight">></div>
         </div>
-        <div class="content">
-          <div class="leftSide"></div>
-          <div class="centerSide"></div>
-          <div class="rightSide"></div>
+        <div class="main">
+          <button class="btnAddContent">+</button>
         </div>
         <button class="btnFooter">CLOSE</button>
       </div>
     </div>
-    <script src="app.js"></script>
+    <script src="firebase-sdk.js" type="module"></script>
+    <script src="app.js" type="module"></script>
   </body>
 </html>

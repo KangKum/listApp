@@ -1,3 +1,6 @@
+import { getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+const db = getFirestore();
+
 //// YEAR AND MONTH
 let year = new Date().getFullYear();
 let month = new Date().getMonth() + 1;
@@ -51,11 +54,22 @@ function setDays() {
     i++;
   }
 
+  let circleContainer = document.createElement("div");
+  circleContainer.classList.add("circleContainer");
+
+  for (let i = 0; i < 4; i++) {
+    let newDiv = document.createElement("div");
+    newDiv.classList.add("greenCircle");
+    circleContainer.appendChild(newDiv);
+  }
+  document.querySelectorAll(".dayBlank")[15].appendChild(circleContainer);
   semiDate();
+  listAddIntoCalendar();
 }
 
 // 당월 총 일수 찾기
 function findAllDays() {
+  let numOfDays;
   if (month === 1 || month === 3 || month === 5 || month === 7 || month === 8 || month === 10 || month === 12) {
     numOfDays = 31;
   } else if (month === 4 || month === 6 || month === 9 || month === 11) {
@@ -68,6 +82,28 @@ function findAllDays() {
     }
   }
   return numOfDays;
+}
+
+//LIST ADD INTO CALENDAR
+async function listAddIntoCalendar() {
+  let allDaysThisMonth = document.querySelectorAll(".dayBlank");
+  let nonEmptyBlank = [];
+  allDaysThisMonth.forEach((blank) => {
+    if (blank.innerText.trim() !== "") {
+      nonEmptyBlank.push(year + "년" + month + "월" + blank.innerText + "일");
+    }
+  });
+
+  //CHAT GPT HELP
+  const querySnapshot = await getDocs(collection(db, "content"));
+  let documentIds = [];
+
+  querySnapshot.forEach((doc) => {
+    documentIds.push(doc.id);
+  });
+
+  let commonDate = nonEmptyBlank.filter((value) => documentIds.includes(value));
+  console.log(commonDate);
 }
 
 //// CHANGE MONTH
@@ -88,8 +124,11 @@ function nextMonth() {
   setDays();
   colorToday();
   disColor();
-  colorFirstDay();
+  if (document.querySelector(".todolist").style.display === "block") {
+    colorFirstDay();
+  }
   listDating();
+  clearContent();
 }
 function previousMonth() {
   if (month > 1) {
@@ -102,8 +141,11 @@ function previousMonth() {
   setDays();
   colorToday();
   disColor();
-  colorFirstDay();
+  if (document.querySelector(".todolist").style.display === "block") {
+    colorFirstDay();
+  }
   listDating();
+  clearContent();
 }
 
 function semiDate() {
@@ -135,8 +177,8 @@ allBlanks.forEach((blank) => {
     if (event.target.innerText !== "") {
       previousClicked = event.target;
       coloring();
-      //here
       listDating();
+      clearContent();
     }
   });
 });
@@ -180,6 +222,7 @@ function listLeft() {
     colorLastDay();
   }
   listDating();
+  clearContent();
 }
 function listRight() {
   let currentOrder = Number(previousClicked.getAttribute("order"));
@@ -202,9 +245,12 @@ function listRight() {
     colorFirstDay();
   }
   listDating();
+  clearContent();
 }
 function listDating() {
-  listDate.innerText = year + "년" + month + "월" + previousClicked.innerText + "일";
+  if (document.querySelector(".todolist").style.display === "block") {
+    listDate.innerText = year + "년" + month + "월" + previousClicked.innerText + "일";
+  }
 }
 btnListLeft.addEventListener("click", listLeft);
 btnListRight.addEventListener("click", listRight);
@@ -229,4 +275,112 @@ function colorLastDay() {
     previousClicked = day2;
   }
   coloring();
+}
+
+// ADD CONTENT
+const btnAddContent = document.querySelector(".btnAddContent");
+btnAddContent.addEventListener("click", addContent);
+
+function addContent() {
+  const newItem = document.createElement("div");
+  newItem.classList.add("item");
+  const newContent = document.createElement("div");
+  newContent.classList.add("content");
+  contentInputable(newContent);
+  newContent.addEventListener("blur", saveData);
+
+  const newBtnCompleted = document.createElement("button");
+  newBtnCompleted.classList.add("btnCompleted");
+  newBtnCompleted.innerText = "V";
+  newBtnCompleted.addEventListener("click", (btn) => {
+    if (btn.target.parentNode.querySelector(".content").classList.contains("success")) {
+      btn.target.parentNode.querySelector(".content").classList.remove("success");
+    } else {
+      btn.target.parentNode.querySelector(".content").classList.add("success");
+    }
+    saveData();
+  });
+
+  const newBtnDelete = document.createElement("button");
+  newBtnDelete.classList.add("btnDelete");
+  newBtnDelete.innerText = "X";
+  newBtnDelete.addEventListener("click", (btn) => {
+    btn.target.parentNode.remove();
+    deleteData();
+  });
+
+  newItem.appendChild(newContent);
+  newItem.appendChild(newBtnCompleted);
+  newItem.appendChild(newBtnDelete);
+
+  btnAddContent.parentNode.insertBefore(newItem, btnAddContent);
+}
+
+// CONTENT INPUTABLE
+function contentInputable(div) {
+  div.setAttribute("contenteditable", "true");
+}
+// CLEAR CONTENT
+function clearContent() {
+  let allItems = document.querySelectorAll(".item");
+  for (let i = 0; i < allItems.length; i++) {
+    allItems[i].remove();
+  }
+  getData();
+}
+
+// FIREBASE INTERACTION
+// async function saveData() {
+//   let saveDate = document.querySelector(".todolist .listDate").innerText;
+//   let itemData = document.querySelectorAll(".item .content");
+//   let tempArray = [];
+//   for (let i = 0; i < itemData.length; i++) {
+//     tempArray.push(itemData[i].innerText);
+//   }
+//   await setDoc(doc(db, "content", saveDate), {
+//     numOfItems: itemData.length,
+//     item: tempArray,
+//   });
+// }
+
+async function saveData() {
+  let saveDate = document.querySelector(".todolist .listDate").innerText;
+  let itemData = document.querySelectorAll(".item .content");
+  let tempArray = [];
+  for (let i = 0; i < itemData.length; i++) {
+    let tempObj = {};
+    tempObj.text = itemData[i].innerText;
+    if (itemData[i].classList[1]) {
+      tempObj.success = itemData[i].classList[1];
+    }
+    tempArray.push(tempObj);
+  }
+  await setDoc(doc(db, "content", saveDate), {
+    numOfItems: itemData.length,
+    item: tempArray,
+  });
+}
+
+async function getData() {
+  if (document.querySelector(".todolist").style.display === "block") {
+    let saveDate = document.querySelector(".todolist .listDate").innerText;
+    const fireData = await getDoc(doc(db, "content", saveDate));
+    if (fireData.data()) {
+      for (let i = 0; i < fireData.data().numOfItems; i++) {
+        addContent();
+      }
+      let allItemContents = document.querySelectorAll(".item .content");
+      for (let i = 0; i < allItemContents.length; i++) {
+        allItemContents[i].innerText = fireData.data().item[i].text;
+        if (fireData.data().item[i].success) {
+          allItemContents[i].classList.add(fireData.data().item[i].success);
+        }
+      }
+    }
+  }
+}
+
+async function deleteData() {
+  let saveDate = document.querySelector(".todolist .listDate").innerText;
+  await deleteDoc(doc(db, "content", saveDate));
 }

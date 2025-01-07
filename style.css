@@ -90,6 +90,7 @@ body {
   border: 1px solid black;
 
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -145,11 +146,48 @@ body {
   justify-content: center;
   align-items: center;
 }
-.todolist .content {
+.todolist .main {
   display: flex;
+  flex-direction: column;
   height: 85%;
   width: 100%;
   border: 1px solid black;
+}
+.todolist .btnAddContent {
+  height: 7%;
+  font-size: 300%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.todolist .item {
+  display: flex;
+  height: 10%;
+  border: 1px solid rgb(167, 163, 163);
+}
+.todolist .item .content {
+  flex: 9;
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 150%;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+}
+.todolist .item .btnCompleted {
+  flex: 1;
+  height: 100%;
+}
+.todolist .item .btnDelete {
+  flex: 1;
+  height: 100%;
+}
+.todolist .success {
+  background-color: rgb(234, 244, 236);
+}
+.todolist .fail {
+  background-color: rgb(224, 179, 179);
 }
 .todolist .btnFooter {
   height: 9%;
@@ -161,16 +199,37 @@ body {
   font-weight: bold;
   cursor: pointer;
 }
-/* 
-.todolist .leftSide,
-.todolist .rightSide {
-  flex: 1;
-  height: 10%;
-  border: 1px solid black;
-}
 
 .todolist .centerSide {
   flex: 10;
   width: 50px;
   height: 10%;
-} */
+}
+
+.calendar .circleContainer {
+  display: flex;
+  position: relative;
+  top: 10%; /* div1의 아래쪽으로 이동 */
+  left: 0;
+}
+
+.blackCircle {
+  border: 1px solid black;
+  border-radius: 50%;
+  width: 1vh;
+  height: 1vh;
+}
+
+.greenCircle {
+  background-color: rgb(234, 244, 236);
+  border-radius: 50%;
+  width: 1vh;
+  height: 1vh;
+}
+
+.failCircle {
+  background-color: red;
+  border-radius: 50%;
+  width: 1vh;
+  height: 1vh;
+}
