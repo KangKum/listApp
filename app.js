@@ -50,21 +50,16 @@ function setDays() {
   // 입력하기
   let i = 0;
   while (i < findAllDays()) {
-    document.querySelectorAll(".dayBlank")[firstDay + i].innerText = i + 1;
+    let circleContainer = document.createElement("div");
+    circleContainer.classList.add("circleContainer");
+    let currentBlank = document.querySelectorAll(".dayBlank")[firstDay + i];
+    currentBlank.innerText = i + 1;
+    currentBlank.appendChild(circleContainer);
     i++;
   }
 
-  let circleContainer = document.createElement("div");
-  circleContainer.classList.add("circleContainer");
-
-  for (let i = 0; i < 4; i++) {
-    let newDiv = document.createElement("div");
-    newDiv.classList.add("greenCircle");
-    circleContainer.appendChild(newDiv);
-  }
-  document.querySelectorAll(".dayBlank")[15].appendChild(circleContainer);
+  markCircles();
   semiDate();
-  listAddIntoCalendar();
 }
 
 // 당월 총 일수 찾기
@@ -84,26 +79,86 @@ function findAllDays() {
   return numOfDays;
 }
 
-//LIST ADD INTO CALENDAR
-async function listAddIntoCalendar() {
-  let allDaysThisMonth = document.querySelectorAll(".dayBlank");
-  let nonEmptyBlank = [];
-  allDaysThisMonth.forEach((blank) => {
-    if (blank.innerText.trim() !== "") {
-      nonEmptyBlank.push(year + "년" + month + "월" + blank.innerText + "일");
+// // MARK CIRCLES
+// async function markCircles() {
+//   //파이어 베이스에 있는 문서들 배열에 담기기
+//   const querySnapshot = await getDocs(collection(db, "content"));
+//   let documentIds = [];
+//   querySnapshot.forEach((doc) => {
+//     documentIds.push(doc.id);
+//   });
+
+//   //달력에 날짜들 배열에 담기
+//   const daysForCompare = [];
+//   for (let i = 1; i <= findAllDays(); i++) {
+//     daysForCompare.push(`${year}년${month}월${i}일`);
+//   }
+
+//   //비교해서 중복값 찾아내기
+//   const markedDays = documentIds.filter((value) => daysForCompare.includes(value));
+
+//   const dayBlanks = document.querySelectorAll(".dayBlank");
+//   //달력에 표시하기 (단, 있으면 ㄴㄴ)
+//   for (let j = 0; j < dayBlanks.length; j++) {
+//     for (let k = 0; k < markedDays.length; k++) {
+//       if (dayBlanks[j].innerText === markedDays[k].match(/월(.*?)일/)[1]) {
+//         let abc = await getDoc(doc(db, "content", markedDays[k]));
+//         let numOfGreenCircles = abc.data().numOfSuccess;
+//         let numOfBlackCircles = abc.data().numOfItems - numOfGreenCircles;
+//         drawCircles(numOfGreenCircles, numOfBlackCircles, dayBlanks[j]);
+//       }
+//     }
+//   }
+// }
+
+// MARK CIRCLES (CHAT GPT)
+async function markCircles() {
+  // 파이어베이스에서 문서 ID 배열 가져오기
+  const querySnapshot = await getDocs(collection(db, "content"));
+  const documentIds = querySnapshot.docs.map((doc) => doc.id);
+
+  // 달력 날짜 배열 생성
+  const daysForCompare = Array.from({ length: findAllDays() }, (_, i) => `${year}년${month}월${i + 1}일`);
+
+  // 중복값 필터링
+  const markedDays = new Set(documentIds.filter((value) => daysForCompare.includes(value)));
+
+  // DOM 요소 캐싱
+  const dayBlanks = Array.from(document.querySelectorAll(".dayBlank"));
+
+  // 파이어베이스 데이터 한 번에 가져오기
+  const markedDayData = await Promise.all(
+    Array.from(markedDays).map(async (day) => {
+      const docSnapshot = await getDoc(doc(db, "content", day));
+      return { id: day, data: docSnapshot.data() };
+    })
+  );
+
+  // 달력 표시 (단, 있으면 X)
+  dayBlanks.forEach((dayBlank) => {
+    const dayText = dayBlank.innerText;
+    const matchedDay = markedDayData.find(({ id }) => id.includes(`${month}월${dayText}일`));
+    if (matchedDay) {
+      const { numOfSuccess, numOfItems } = matchedDay.data;
+      const numOfGreenCircles = numOfSuccess;
+      const numOfBlackCircles = numOfItems - numOfGreenCircles;
+      drawCircles(numOfGreenCircles, numOfBlackCircles, dayBlank);
     }
   });
+}
 
-  //CHAT GPT HELP
-  const querySnapshot = await getDocs(collection(db, "content"));
-  let documentIds = [];
-
-  querySnapshot.forEach((doc) => {
-    documentIds.push(doc.id);
-  });
-
-  let commonDate = nonEmptyBlank.filter((value) => documentIds.includes(value));
-  console.log(commonDate);
+function drawCircles(green, black, blank) {
+  blank.querySelector(".circleContainer").innerHTML = "";
+  for (let i = 0; i < green; i++) {
+    let greenCircle = document.createElement("div");
+    greenCircle.classList.add("greenCircle");
+    blank.querySelector(".circleContainer").appendChild(greenCircle);
+  }
+  for (let j = 0; j < black; j++) {
+    let blackCircle = document.createElement("div");
+    blackCircle.classList.add("blackCircle");
+    blank.querySelector(".circleContainer").appendChild(blackCircle);
+  }
 }
 
 //// CHANGE MONTH
@@ -288,6 +343,7 @@ function addContent() {
   newContent.classList.add("content");
   contentInputable(newContent);
   newContent.addEventListener("blur", saveData);
+  newContent.addEventListener("blur", markCircles);
 
   const newBtnCompleted = document.createElement("button");
   newBtnCompleted.classList.add("btnCompleted");
@@ -299,6 +355,7 @@ function addContent() {
       btn.target.parentNode.querySelector(".content").classList.add("success");
     }
     saveData();
+    markCircles();
   });
 
   const newBtnDelete = document.createElement("button");
@@ -307,6 +364,8 @@ function addContent() {
   newBtnDelete.addEventListener("click", (btn) => {
     btn.target.parentNode.remove();
     deleteData();
+    saveData();
+    markCircles();
   });
 
   newItem.appendChild(newContent);
@@ -329,35 +388,24 @@ function clearContent() {
   getData();
 }
 
-// FIREBASE INTERACTION
-// async function saveData() {
-//   let saveDate = document.querySelector(".todolist .listDate").innerText;
-//   let itemData = document.querySelectorAll(".item .content");
-//   let tempArray = [];
-//   for (let i = 0; i < itemData.length; i++) {
-//     tempArray.push(itemData[i].innerText);
-//   }
-//   await setDoc(doc(db, "content", saveDate), {
-//     numOfItems: itemData.length,
-//     item: tempArray,
-//   });
-// }
-
 async function saveData() {
   let saveDate = document.querySelector(".todolist .listDate").innerText;
   let itemData = document.querySelectorAll(".item .content");
   let tempArray = [];
+  let numOfSuccess = 0;
   for (let i = 0; i < itemData.length; i++) {
     let tempObj = {};
     tempObj.text = itemData[i].innerText;
     if (itemData[i].classList[1]) {
       tempObj.success = itemData[i].classList[1];
+      numOfSuccess++;
     }
     tempArray.push(tempObj);
   }
   await setDoc(doc(db, "content", saveDate), {
     numOfItems: itemData.length,
     item: tempArray,
+    numOfSuccess: numOfSuccess,
   });
 }
 
