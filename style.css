@@ -7,11 +7,23 @@ body {
 }
 .container {
   display: flex;
+  flex-direction: row;
   justify-content: center;
 
   height: 100%;
   width: 100%;
   user-select: none;
+}
+.container-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 5;
+}
+.container-side {
+  display: none;
+  margin-right: 10vh;
+  flex: 2;
 }
 .searchBar {
   border: 1px solid black;
@@ -168,9 +180,65 @@ body {
   flex-direction: column;
   height: 100%;
   border: 1px solid black;
-  flex: 0.7;
   border-top: 2vh solid rgb(208, 205, 230);
+}
+
+.searchlist {
   display: none;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid black;
+  border-top: 2vh solid rgb(208, 205, 230);
+}
+.searchlist .searchItem {
+  height: 5%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 100%;
+}
+.searchItem .searchItemLeft,
+.searchItem .searchItemRight {
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.searchItem .searchItemDate {
+  flex: 2;
+  height: 100%;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  padding-left: 1%;
+}
+.searchItem .searchItemText {
+  flex: 5;
+  height: 100%;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  padding-left: 1%;
+}
+.searchlist .header {
+  height: 3%;
+}
+.searchlist .main {
+  height: 91%;
+}
+.searchlist .btnFooter {
+  height: 6%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 150%;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .todolist .header {
@@ -202,7 +270,7 @@ body {
 .todolist .main {
   display: flex;
   flex-direction: column;
-  height: 85%;
+  height: 88%;
   width: 100%;
   border: 1px solid black;
 }
@@ -243,7 +311,7 @@ body {
   background-color: rgb(224, 179, 179);
 }
 .todolist .btnFooter {
-  height: 9%;
+  height: 6%;
   width: 100%;
   display: flex;
   justify-content: center;

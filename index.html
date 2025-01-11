@@ -7,97 +7,106 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    1.검색기능 2.화면 핸드폰에맞게 3. 핸드폰에서 사용할수있게
+    1.main,header 2.순서배열 3.화면 핸드폰에맞게 4.핸드폰에서 사용할수있게
     <div class="container">
-      <div class="searchBar" contenteditable="true"></div>
-      <div class="calendar">
-        <div class="left">
-          <div class="leftName"></div>
-          <button class="btnLeft"><</button>
-        </div>
-        <div class="center">
-          <div class="yearAndMonth"></div>
-          <div class="dayLine">
-            <div class="sun">SUN</div>
-            <div class="mon">MON</div>
-            <div class="tue">TUE</div>
-            <div class="wed">WED</div>
-            <div class="thu">THU</div>
-            <div class="fri">FRI</div>
-            <div class="sat">SAT</div>
+      <div class="container-main">
+        <div class="searchBar" contenteditable="true"></div>
+        <div class="calendar">
+          <div class="left">
+            <div class="leftName"></div>
+            <button class="btnLeft"><</button>
           </div>
-          <div class="firstLine">
-            <div class="sun dayBlank" order="0"></div>
-            <div class="mon dayBlank" order="1"></div>
-            <div class="tue dayBlank" order="2"></div>
-            <div class="wed dayBlank" order="3"></div>
-            <div class="thu dayBlank" order="4"></div>
-            <div class="fri dayBlank" order="5"></div>
-            <div class="sat dayBlank" order="6"></div>
+          <div class="center">
+            <div class="yearAndMonth"></div>
+            <div class="dayLine">
+              <div class="sun">SUN</div>
+              <div class="mon">MON</div>
+              <div class="tue">TUE</div>
+              <div class="wed">WED</div>
+              <div class="thu">THU</div>
+              <div class="fri">FRI</div>
+              <div class="sat">SAT</div>
+            </div>
+            <div class="firstLine">
+              <div class="sun dayBlank" order="0"></div>
+              <div class="mon dayBlank" order="1"></div>
+              <div class="tue dayBlank" order="2"></div>
+              <div class="wed dayBlank" order="3"></div>
+              <div class="thu dayBlank" order="4"></div>
+              <div class="fri dayBlank" order="5"></div>
+              <div class="sat dayBlank" order="6"></div>
+            </div>
+            <div class="secondLine">
+              <div class="sun dayBlank" order="7"></div>
+              <div class="mon dayBlank" order="8"></div>
+              <div class="tue dayBlank" order="9"></div>
+              <div class="wed dayBlank" order="10"></div>
+              <div class="thu dayBlank" order="11"></div>
+              <div class="fri dayBlank" order="12"></div>
+              <div class="sat dayBlank" order="13"></div>
+            </div>
+            <div class="thirdLine">
+              <div class="sun dayBlank" order="14"></div>
+              <div class="mon dayBlank" order="15"></div>
+              <div class="tue dayBlank" order="16"></div>
+              <div class="wed dayBlank" order="17"></div>
+              <div class="thu dayBlank" order="18"></div>
+              <div class="fri dayBlank" order="19"></div>
+              <div class="sat dayBlank" order="20"></div>
+            </div>
+            <div class="fourthLine">
+              <div class="sun dayBlank" order="21"></div>
+              <div class="mon dayBlank" order="22"></div>
+              <div class="tue dayBlank" order="23"></div>
+              <div class="wed dayBlank" order="24"></div>
+              <div class="thu dayBlank" order="25"></div>
+              <div class="fri dayBlank" order="26"></div>
+              <div class="sat dayBlank" order="27"></div>
+            </div>
+            <div class="fifthLine">
+              <div class="sun dayBlank" order="28"></div>
+              <div class="mon dayBlank" order="29"></div>
+              <div class="tue dayBlank" order="30"></div>
+              <div class="wed dayBlank" order="31"></div>
+              <div class="thu dayBlank" order="32"></div>
+              <div class="fri dayBlank" order="33"></div>
+              <div class="sat dayBlank" order="34"></div>
+            </div>
+            <div class="sixthLine">
+              <div class="sun dayBlank" order="35"></div>
+              <div class="mon dayBlank" order="36"></div>
+              <div class="tue dayBlank" order="37"></div>
+              <div class="wed dayBlank" order="38"></div>
+              <div class="thu dayBlank" order="39"></div>
+              <div class="fri dayBlank" order="40"></div>
+              <div class="sat dayBlank" order="41"></div>
+            </div>
           </div>
-          <div class="secondLine">
-            <div class="sun dayBlank" order="7"></div>
-            <div class="mon dayBlank" order="8"></div>
-            <div class="tue dayBlank" order="9"></div>
-            <div class="wed dayBlank" order="10"></div>
-            <div class="thu dayBlank" order="11"></div>
-            <div class="fri dayBlank" order="12"></div>
-            <div class="sat dayBlank" order="13"></div>
+          <div class="right">
+            <div class="rightName"></div>
+            <button class="btnRight">></button>
           </div>
-          <div class="thirdLine">
-            <div class="sun dayBlank" order="14"></div>
-            <div class="mon dayBlank" order="15"></div>
-            <div class="tue dayBlank" order="16"></div>
-            <div class="wed dayBlank" order="17"></div>
-            <div class="thu dayBlank" order="18"></div>
-            <div class="fri dayBlank" order="19"></div>
-            <div class="sat dayBlank" order="20"></div>
-          </div>
-          <div class="fourthLine">
-            <div class="sun dayBlank" order="21"></div>
-            <div class="mon dayBlank" order="22"></div>
-            <div class="tue dayBlank" order="23"></div>
-            <div class="wed dayBlank" order="24"></div>
-            <div class="thu dayBlank" order="25"></div>
-            <div class="fri dayBlank" order="26"></div>
-            <div class="sat dayBlank" order="27"></div>
-          </div>
-          <div class="fifthLine">
-            <div class="sun dayBlank" order="28"></div>
-            <div class="mon dayBlank" order="29"></div>
-            <div class="tue dayBlank" order="30"></div>
-            <div class="wed dayBlank" order="31"></div>
-            <div class="thu dayBlank" order="32"></div>
-            <div class="fri dayBlank" order="33"></div>
-            <div class="sat dayBlank" order="34"></div>
-          </div>
-          <div class="sixthLine">
-            <div class="sun dayBlank" order="35"></div>
-            <div class="mon dayBlank" order="36"></div>
-            <div class="tue dayBlank" order="37"></div>
-            <div class="wed dayBlank" order="38"></div>
-            <div class="thu dayBlank" order="39"></div>
-            <div class="fri dayBlank" order="40"></div>
-            <div class="sat dayBlank" order="41"></div>
-          </div>
-        </div>
-        <div class="right">
-          <div class="rightName"></div>
-          <button class="btnRight">></button>
         </div>
       </div>
-      <div class="todolist">
-        <div class="header">
-          <div class="btnListLeft"><</div>
-          <div class="listDate"></div>
-          <div class="btnListRight">></div>
+      <div class="container-side">
+        <div class="todolist">
+          <div class="header">
+            <div class="btnListLeft"><</div>
+            <div class="listDate"></div>
+            <div class="btnListRight">></div>
+          </div>
+          <div class="main">
+            <button class="btnAddContent">+</button>
+          </div>
+          <button class="btnFooter">CLOSE</button>
         </div>
-        <div class="main">
-          <button class="btnAddContent">+</button>
+        <div class="searchlist">
+          <div class="header"></div>
+          <div class="main"></div>
         </div>
-        <button class="btnFooter">CLOSE</button>
       </div>
     </div>
+
     <script src="firebase-sdk.js" type="module"></script>
     <script src="app.js" type="module"></script>
   </body>

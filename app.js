@@ -79,38 +79,6 @@ function findAllDays() {
   return numOfDays;
 }
 
-// // MARK CIRCLES
-// async function markCircles() {
-//   //파이어 베이스에 있는 문서들 배열에 담기기
-//   const querySnapshot = await getDocs(collection(db, "content"));
-//   let documentIds = [];
-//   querySnapshot.forEach((doc) => {
-//     documentIds.push(doc.id);
-//   });
-
-//   //달력에 날짜들 배열에 담기
-//   const daysForCompare = [];
-//   for (let i = 1; i <= findAllDays(); i++) {
-//     daysForCompare.push(`${year}년${month}월${i}일`);
-//   }
-
-//   //비교해서 중복값 찾아내기
-//   const markedDays = documentIds.filter((value) => daysForCompare.includes(value));
-
-//   const dayBlanks = document.querySelectorAll(".dayBlank");
-//   //달력에 표시하기 (단, 있으면 ㄴㄴ)
-//   for (let j = 0; j < dayBlanks.length; j++) {
-//     for (let k = 0; k < markedDays.length; k++) {
-//       if (dayBlanks[j].innerText === markedDays[k].match(/월(.*?)일/)[1]) {
-//         let abc = await getDoc(doc(db, "content", markedDays[k]));
-//         let numOfGreenCircles = abc.data().numOfSuccess;
-//         let numOfBlackCircles = abc.data().numOfItems - numOfGreenCircles;
-//         drawCircles(numOfGreenCircles, numOfBlackCircles, dayBlanks[j]);
-//       }
-//     }
-//   }
-// }
-
 // MARK CIRCLES (CHAT GPT)
 async function markCircles() {
   // 파이어베이스에서 문서 ID 배열 가져오기
@@ -179,9 +147,7 @@ function nextMonth() {
   setDays();
   colorToday();
   disColor();
-  if (document.querySelector(".todolist").style.display === "block") {
-    colorFirstDay();
-  }
+  colorFirstDay();
   listDating();
   clearContent();
 }
@@ -196,9 +162,7 @@ function previousMonth() {
   setDays();
   colorToday();
   disColor();
-  if (document.querySelector(".todolist").style.display === "block") {
-    colorFirstDay();
-  }
+  colorFirstDay();
   listDating();
   clearContent();
 }
@@ -219,15 +183,15 @@ function semiDate() {
 }
 
 //// TODOLIST
+const containerSide = document.querySelector(".container-side");
 const todolist = document.querySelector(".todolist");
 const allBlanks = document.querySelectorAll(".dayBlank");
 const btnExit = document.querySelector(".btnFooter");
 const listDate = document.querySelector(".listDate");
-let listDateText;
 
 allBlanks.forEach((blank) => {
   blank.addEventListener("click", (event) => {
-    openTodolist();
+    showTodoList();
     disColor();
     if (event.target.innerText !== "") {
       previousClicked = event.target;
@@ -237,17 +201,12 @@ allBlanks.forEach((blank) => {
     }
   });
 });
-btnExit.addEventListener("click", closeTodolist);
+btnExit.addEventListener("click", closeContainerSide);
 
-function openTodolist() {
-  if (todolist.style.display === "block") {
-  } else {
-    todolist.style.display = "block";
-  }
-}
-
-function closeTodolist() {
+function closeContainerSide() {
+  containerSide.style.display = "none";
   todolist.style.display = "none";
+  searchlist.style.display = "none";
   if (previousClicked) {
     previousClicked.classList.remove("clickedDay");
   }
@@ -292,7 +251,6 @@ function listRight() {
       month = 1;
     } else {
       month++;
-      //here
     }
     setCalendar(year, month);
     setDays();
@@ -303,7 +261,7 @@ function listRight() {
   clearContent();
 }
 function listDating() {
-  if (document.querySelector(".todolist").style.display === "block") {
+  if (todolist.style.display === "block") {
     listDate.innerText = year + "년" + month + "월" + previousClicked.innerText + "일";
   }
 }
@@ -311,11 +269,13 @@ btnListLeft.addEventListener("click", listLeft);
 btnListRight.addEventListener("click", listRight);
 
 function colorFirstDay() {
-  disColor();
-  const firstLine = document.querySelector(".firstLine").querySelectorAll(".dayBlank");
-  const day = Array.from(firstLine).find((blank) => blank.innerText === "1");
-  previousClicked = day;
-  coloring();
+  if (containerSide.style.display === "block") {
+    disColor();
+    const firstLine = document.querySelector(".firstLine").querySelectorAll(".dayBlank");
+    const day = Array.from(firstLine).find((blank) => blank.innerText === "1");
+    previousClicked = day;
+    coloring();
+  }
 }
 
 function colorLastDay() {
@@ -410,7 +370,7 @@ async function saveData() {
 }
 
 async function getData() {
-  if (document.querySelector(".todolist").style.display === "block") {
+  if (todolist.style.display === "block") {
     let saveDate = document.querySelector(".todolist .listDate").innerText;
     const fireData = await getDoc(doc(db, "content", saveDate));
     if (fireData.data()) {
@@ -431,4 +391,90 @@ async function getData() {
 async function deleteData() {
   let saveDate = document.querySelector(".todolist .listDate").innerText;
   await deleteDoc(doc(db, "content", saveDate));
+}
+
+// SEARCH ITEM
+const searchBar = document.querySelector(".searchBar");
+searchBar.addEventListener("keydown", async (event) => {
+  if (event.key === "Enter") {
+    const querySnapshot = await getDocs(collection(db, "content"));
+    let items = [];
+    querySnapshot.forEach((doc) => {
+      let i = 0;
+      while (doc.data().item.length > i) {
+        const item = {
+          id: doc.id,
+          data: doc.data().item[i],
+        };
+        i++;
+        items.push(item);
+      }
+    });
+    // console.log(items);
+
+    const searchList = [];
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].data.text.includes(searchBar.innerText.trim())) {
+        const item = {
+          date: items[i].id,
+          text: items[i].data.text,
+        };
+        searchList.push(item);
+      }
+    }
+    // console.log(searchList);
+    showSearchList(searchList);
+  }
+});
+
+const searchlist = document.querySelector(".searchlist");
+
+function showTodoList() {
+  containerSide.style.display = "block";
+  todolist.style.display = "block";
+  searchlist.style.display = "none";
+}
+
+function showSearchList(searchList) {
+  containerSide.style.display = "block";
+  searchlist.style.display = "block";
+  todolist.style.display = "none";
+  searchlist.innerText = "";
+
+  //날짜+내용
+  let newSearchItem = document.createElement("div");
+  newSearchItem.classList.add("searchItem");
+  let newSearchItemDate = document.createElement("div");
+  let newSearchItemText = document.createElement("div");
+  newSearchItemDate.classList.add("searchItemDate");
+  newSearchItemText.classList.add("searchItemText");
+  newSearchItemDate.classList.add("searchItemLeft");
+  newSearchItemText.classList.add("searchItemRight");
+  newSearchItemDate.innerText = "날짜";
+  newSearchItemText.innerText = "내용";
+  newSearchItem.appendChild(newSearchItemDate);
+  newSearchItem.appendChild(newSearchItemText);
+  searchlist.appendChild(newSearchItem);
+
+  //실제 데이터
+  let numOfSearchItems = searchList.length;
+  for (let i = 0; i < numOfSearchItems; i++) {
+    let newSearchItem = document.createElement("div");
+    newSearchItem.classList.add("searchItem");
+    let newSearchItemDate = document.createElement("div");
+    let newSearchItemText = document.createElement("div");
+    newSearchItemDate.classList.add("searchItemDate");
+    newSearchItemText.classList.add("searchItemText");
+    newSearchItemDate.innerText = searchList[i].date;
+    newSearchItemText.innerText = searchList[i].text;
+    newSearchItem.appendChild(newSearchItemDate);
+    newSearchItem.appendChild(newSearchItemText);
+    searchlist.appendChild(newSearchItem);
+  }
+  let newCloseBtn = document.createElement("button");
+  newCloseBtn.classList.add("btnFooter");
+  newCloseBtn.innerText = "CLOSE";
+  newCloseBtn.addEventListener("click", closeContainerSide);
+
+  searchlist.appendChild(newCloseBtn);
 }
