@@ -19,11 +19,13 @@ body {
   flex-direction: column;
   align-items: center;
   flex: 5;
+  height: 100%;
 }
 .container-side {
   display: none;
   margin-right: 10vh;
   flex: 2;
+  height: 100%;
 }
 .searchBar {
   border: 1px solid black;
@@ -182,65 +184,6 @@ body {
   border: 1px solid black;
   border-top: 2vh solid rgb(208, 205, 230);
 }
-
-.searchlist {
-  display: none;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  border: 1px solid black;
-  border-top: 2vh solid rgb(208, 205, 230);
-}
-.searchlist .searchItem {
-  height: 5%;
-  width: 100%;
-
-  display: flex;
-  flex-direction: row;
-
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 100%;
-}
-.searchItem .searchItemLeft,
-.searchItem .searchItemRight {
-  display: flex;
-  justify-content: center;
-  font-weight: bold;
-}
-
-.searchItem .searchItemDate {
-  flex: 2;
-  height: 100%;
-  border: 1px solid black;
-  display: flex;
-  align-items: center;
-  padding-left: 1%;
-}
-.searchItem .searchItemText {
-  flex: 5;
-  height: 100%;
-  border: 1px solid black;
-  display: flex;
-  align-items: center;
-  padding-left: 1%;
-}
-.searchlist .header {
-  height: 3%;
-}
-.searchlist .main {
-  height: 91%;
-}
-.searchlist .btnFooter {
-  height: 6%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 150%;
-  font-weight: bold;
-  cursor: pointer;
-}
-
 .todolist .header {
   height: 6%;
   width: 100%;
@@ -320,9 +263,88 @@ body {
   font-weight: bold;
   cursor: pointer;
 }
-
 .todolist .centerSide {
   flex: 10;
   width: 50px;
   height: 10%;
+}
+
+.searchlist {
+  display: none;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid black;
+  border-top: 2vh solid rgb(208, 205, 230);
+}
+.searchlist .header {
+  height: 3%;
+  width: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 90%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.searchlist .main {
+  height: 91%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-y: auto;
+}
+
+.searchlist .searchItem {
+  height: 5%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  /* flex-shrink: 0; */
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 100%;
+}
+.searchItem .searchItemLeft,
+.searchItem .searchItemRight {
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.searchItem .searchItemDate {
+  flex: 2;
+  height: 100%;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  padding-left: 1%;
+}
+.searchItem .searchItemText {
+  flex: 3;
+  height: 100%;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  padding-left: 1%;
+}
+.searchlist .btnFooter {
+  height: 6%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 150%;
+  font-weight: bold;
+  cursor: pointer;
+}
+.searchlist .success {
+  background-color: rgb(234, 244, 236);
+}
+
+.hide {
+  display: none !important;
 }

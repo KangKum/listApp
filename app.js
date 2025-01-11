@@ -186,7 +186,7 @@ function semiDate() {
 const containerSide = document.querySelector(".container-side");
 const todolist = document.querySelector(".todolist");
 const allBlanks = document.querySelectorAll(".dayBlank");
-const btnExit = document.querySelector(".btnFooter");
+const btnExit = document.querySelectorAll(".btnFooter");
 const listDate = document.querySelector(".listDate");
 
 allBlanks.forEach((blank) => {
@@ -201,7 +201,9 @@ allBlanks.forEach((blank) => {
     }
   });
 });
-btnExit.addEventListener("click", closeContainerSide);
+btnExit.forEach((btn) => {
+  btn.addEventListener("click", closeContainerSide);
+});
 
 function closeContainerSide() {
   containerSide.style.display = "none";
@@ -302,6 +304,12 @@ function addContent() {
   const newContent = document.createElement("div");
   newContent.classList.add("content");
   contentInputable(newContent);
+  newContent.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      newContent.blur();
+      saveData();
+    }
+  });
   newContent.addEventListener("blur", saveData);
   newContent.addEventListener("blur", markCircles);
 
@@ -333,6 +341,7 @@ function addContent() {
   newItem.appendChild(newBtnDelete);
 
   btnAddContent.parentNode.insertBefore(newItem, btnAddContent);
+  newContent.focus();
 }
 
 // CONTENT INPUTABLE
@@ -403,31 +412,44 @@ searchBar.addEventListener("keydown", async (event) => {
       let i = 0;
       while (doc.data().item.length > i) {
         const item = {
-          id: doc.id,
+          date: doc.id,
           data: doc.data().item[i],
         };
         i++;
         items.push(item);
       }
     });
-    // console.log(items);
 
     const searchList = [];
     for (let i = 0; i < items.length; i++) {
       if (items[i].data.text.includes(searchBar.innerText.trim())) {
         const item = {
-          date: items[i].id,
+          date: items[i].date,
           text: items[i].data.text,
+          success: items[i].data.success !== undefined ? items[i].data.success : null,
         };
         searchList.push(item);
       }
     }
     // console.log(searchList);
-    showSearchList(searchList);
+    // 날짜순으로 정렬(CHAT GPT)
+    const sortedData = searchList.sort((a, b) => {
+      const parseDate = (date) => {
+        const [year, month, day] = date.match(/\d+/g).map(Number);
+        return new Date(year, month - 1, day);
+      };
+
+      return parseDate(a.date) - parseDate(b.date);
+    });
+    // console.log(sortedData);
+
+    showSearchList(sortedData);
   }
 });
 
 const searchlist = document.querySelector(".searchlist");
+// const searchlistHeader = searchlist.querySelector(".header");
+const searchlistMain = searchlist.querySelector(".main");
 
 function showTodoList() {
   containerSide.style.display = "block";
@@ -439,7 +461,8 @@ function showSearchList(searchList) {
   containerSide.style.display = "block";
   searchlist.style.display = "block";
   todolist.style.display = "none";
-  searchlist.innerText = "";
+  searchlistMain.innerText = "";
+  checkbox.checked = false;
 
   //날짜+내용
   let newSearchItem = document.createElement("div");
@@ -454,7 +477,7 @@ function showSearchList(searchList) {
   newSearchItemText.innerText = "내용";
   newSearchItem.appendChild(newSearchItemDate);
   newSearchItem.appendChild(newSearchItemText);
-  searchlist.appendChild(newSearchItem);
+  searchlistMain.appendChild(newSearchItem);
 
   //실제 데이터
   let numOfSearchItems = searchList.length;
@@ -469,12 +492,24 @@ function showSearchList(searchList) {
     newSearchItemText.innerText = searchList[i].text;
     newSearchItem.appendChild(newSearchItemDate);
     newSearchItem.appendChild(newSearchItemText);
-    searchlist.appendChild(newSearchItem);
+    if (searchList[i].success !== null) {
+      newSearchItem.classList.add("success");
+    }
+    searchlistMain.appendChild(newSearchItem);
   }
-  let newCloseBtn = document.createElement("button");
-  newCloseBtn.classList.add("btnFooter");
-  newCloseBtn.innerText = "CLOSE";
-  newCloseBtn.addEventListener("click", closeContainerSide);
-
-  searchlist.appendChild(newCloseBtn);
 }
+
+//FILTER SUCCESS
+const checkbox = document.querySelector(".checkbox");
+checkbox.addEventListener("change", (event) => {
+  if (event.target.checked) {
+    const successItem = searchlistMain.querySelectorAll(".success");
+    searchlistMain.querySelectorAll(".searchItem.success").forEach((a) => {
+      a.classList.add("hide");
+    });
+  } else {
+    searchlistMain.querySelectorAll(".searchItem.success").forEach((a) => {
+      a.classList.remove("hide");
+    });
+  }
+});
