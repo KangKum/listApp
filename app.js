@@ -132,9 +132,13 @@ function drawCircles(green, black, blank) {
 //// CHANGE MONTH
 const btnRight = document.querySelector(".btnRight");
 const btnLeft = document.querySelector(".btnLeft");
+const btnDown = document.querySelector(".btnDown");
+const btnUp = document.querySelector(".btnUp");
 
 btnRight.addEventListener("click", nextMonth);
+btnDown.addEventListener("click", nextMonth);
 btnLeft.addEventListener("click", previousMonth);
+btnUp.addEventListener("click", previousMonth);
 
 function nextMonth() {
   if (month < 12) {
@@ -167,18 +171,28 @@ function previousMonth() {
   clearContent();
 }
 
+// SEMIDATE
+
 function semiDate() {
-  const leftDate = document.querySelector(".leftName");
-  const rightDate = document.querySelector(".rightName");
+  const leftDate = document.querySelector(".btnLeft");
+  const rightDate = document.querySelector(".btnRight");
+  const upDate = document.querySelector(".btnUp");
+  const downDate = document.querySelector(".btnDown");
   if (month === 1) {
     leftDate.innerText = "12월";
+    upDate.innerText = "12월";
     rightDate.innerText = month + 1 + "월";
+    downDate.innerText = month + 1 + "월";
   } else if (month === 12) {
     leftDate.innerText = month - 1 + "월";
+    upDate.innerText = month - 1 + "월";
     rightDate.innerText = "1월";
+    downDate.innerText = "1월";
   } else {
     leftDate.innerText = month - 1 + "월";
+    upDate.innerText = month - 1 + "월";
     rightDate.innerText = month + 1 + "월";
+    downDate.innerText = month + 1 + "월";
   }
 }
 
@@ -206,6 +220,12 @@ btnExit.forEach((btn) => {
 });
 
 function closeContainerSide() {
+  if (document.body.clientWidth <= 600) {
+    //MOBILE VIEW
+    document.querySelector(".container-main").classList.remove("hide");
+  } else {
+    //COMPUTER VIEW
+  }
   containerSide.style.display = "none";
   todolist.style.display = "none";
   searchlist.style.display = "none";
@@ -452,12 +472,18 @@ const searchlist = document.querySelector(".searchlist");
 const searchlistMain = searchlist.querySelector(".main");
 
 function showTodoList() {
+  if (document.body.clientWidth <= 600) {
+    document.querySelector(".container-main").classList.add("hide");
+  }
   containerSide.style.display = "block";
   todolist.style.display = "block";
   searchlist.style.display = "none";
 }
 
 function showSearchList(searchList) {
+  if (document.body.clientWidth <= 600) {
+    document.querySelector(".container-main").classList.add("hide");
+  }
   containerSide.style.display = "block";
   searchlist.style.display = "block";
   todolist.style.display = "none";
@@ -513,3 +539,20 @@ checkbox.addEventListener("change", (event) => {
     });
   }
 });
+
+// CHANGE SCREEN (LEFT, RIGHT BUTTON)
+const calendarLeft = document.querySelector(".left");
+const calendarRight = document.querySelector(".right");
+const calendarUp = document.querySelector(".up");
+const calendarDown = document.querySelector(".down");
+if (document.body.clientWidth <= 600) {
+  calendarLeft.classList.add("hide");
+  calendarRight.classList.add("hide");
+  calendarUp.classList.remove("hide");
+  calendarDown.classList.remove("hide");
+} else {
+  calendarLeft.classList.remove("hide");
+  calendarRight.classList.remove("hide");
+  calendarUp.classList.add("hide");
+  calendarDown.classList.add("hide");
+}
