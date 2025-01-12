@@ -384,7 +384,9 @@ body {
   }
   .container-side {
     display: none;
+    height: 100%;
     margin: 0;
+    /* margin-bottom: 15%; */
   }
   .searchBar {
     border: 1px solid black;
@@ -437,5 +439,29 @@ body {
   .calendar .center {
     width: 100%;
     font-size: 80%;
+  }
+  .todolist {
+    height: 95%;
+  }
+  .todolist .header {
+    height: 5%;
+  }
+  .todolist .main {
+    height: 85%;
+  }
+  .todolist .btnFooter {
+    height: 5%;
+  }
+  .searchlist {
+    height: 95%;
+  }
+  .searchlist .header {
+    height: 5%;
+  }
+  .searchlist .main {
+    height: 85%;
+  }
+  .searchlist .btnFooter {
+    height: 5%;
   }
 }
