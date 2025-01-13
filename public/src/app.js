@@ -132,13 +132,13 @@ function drawCircles(green, black, blank) {
 //// CHANGE MONTH
 const btnRight = document.querySelector(".btnRight");
 const btnLeft = document.querySelector(".btnLeft");
-const btnDown = document.querySelector(".btnDown");
-const btnUp = document.querySelector(".btnUp");
+// const btnDown = document.querySelector(".btnDown");
+// const btnUp = document.querySelector(".btnUp");
 
 btnRight.addEventListener("click", nextMonth);
-btnDown.addEventListener("click", nextMonth);
+// btnDown.addEventListener("click", nextMonth);
 btnLeft.addEventListener("click", previousMonth);
-btnUp.addEventListener("click", previousMonth);
+// btnUp.addEventListener("click", previousMonth);
 
 function nextMonth() {
   if (month < 12) {
@@ -176,27 +176,28 @@ function previousMonth() {
 function semiDate() {
   const leftDate = document.querySelector(".btnLeft");
   const rightDate = document.querySelector(".btnRight");
-  const upDate = document.querySelector(".btnUp");
-  const downDate = document.querySelector(".btnDown");
+  // const upDate = document.querySelector(".btnUp");
+  // const downDate = document.querySelector(".btnDown");
   if (month === 1) {
     leftDate.innerText = "12월";
-    upDate.innerText = "12월";
+    // upDate.innerText = "12월";
     rightDate.innerText = month + 1 + "월";
-    downDate.innerText = month + 1 + "월";
+    // downDate.innerText = month + 1 + "월";
   } else if (month === 12) {
     leftDate.innerText = month - 1 + "월";
-    upDate.innerText = month - 1 + "월";
+    // upDate.innerText = month - 1 + "월";
     rightDate.innerText = "1월";
-    downDate.innerText = "1월";
+    // downDate.innerText = "1월";
   } else {
     leftDate.innerText = month - 1 + "월";
-    upDate.innerText = month - 1 + "월";
+    // upDate.innerText = month - 1 + "월";
     rightDate.innerText = month + 1 + "월";
-    downDate.innerText = month + 1 + "월";
+    // downDate.innerText = month + 1 + "월";
   }
 }
 
 //// TODOLIST
+const containerMain = document.querySelector(".container-main");
 const containerSide = document.querySelector(".container-side");
 const todolist = document.querySelector(".todolist");
 const allBlanks = document.querySelectorAll(".dayBlank");
@@ -205,13 +206,15 @@ const listDate = document.querySelector(".listDate");
 
 allBlanks.forEach((blank) => {
   blank.addEventListener("click", (event) => {
-    showTodoList();
-    disColor();
     if (event.target.innerText !== "") {
+      showTodoList();
+      disColor();
+      // if (event.target.innerText !== "") {
       previousClicked = event.target;
       coloring();
       listDating();
       clearContent();
+      // }
     }
   });
 });
@@ -222,7 +225,7 @@ btnExit.forEach((btn) => {
 function closeContainerSide() {
   if (document.body.clientWidth <= 600) {
     //MOBILE VIEW
-    document.querySelector(".container-main").classList.remove("hide");
+    containerMain.classList.remove("hide");
   } else {
     //COMPUTER VIEW
   }
@@ -473,7 +476,7 @@ const searchlistMain = searchlist.querySelector(".main");
 
 function showTodoList() {
   if (document.body.clientWidth <= 600) {
-    document.querySelector(".container-main").classList.add("hide");
+    containerMain.classList.add("hide");
   }
   containerSide.style.display = "block";
   todolist.style.display = "block";
@@ -482,7 +485,7 @@ function showTodoList() {
 
 function showSearchList(searchList) {
   if (document.body.clientWidth <= 600) {
-    document.querySelector(".container-main").classList.add("hide");
+    containerMain.classList.add("hide");
   }
   containerSide.style.display = "block";
   searchlist.style.display = "block";
@@ -543,16 +546,35 @@ checkbox.addEventListener("change", (event) => {
 // CHANGE SCREEN (LEFT, RIGHT BUTTON)
 const calendarLeft = document.querySelector(".left");
 const calendarRight = document.querySelector(".right");
-const calendarUp = document.querySelector(".up");
-const calendarDown = document.querySelector(".down");
+// const calendarUp = document.querySelector(".up");
+// const calendarDown = document.querySelector(".down");
 if (document.body.clientWidth <= 600) {
   calendarLeft.classList.add("hide");
   calendarRight.classList.add("hide");
-  calendarUp.classList.remove("hide");
-  calendarDown.classList.remove("hide");
+  // calendarUp.classList.remove("hide");
+  // calendarDown.classList.remove("hide");
 } else {
   calendarLeft.classList.remove("hide");
   calendarRight.classList.remove("hide");
-  calendarUp.classList.add("hide");
-  calendarDown.classList.add("hide");
+  // calendarUp.classList.add("hide");
+  // calendarDown.classList.add("hide");
 }
+
+let touchStartY = 0;
+let touchEndY = 0;
+
+containerMain.addEventListener("touchstart", (event) => {
+  touchStartY = event.touches[0].clientY;
+});
+
+containerMain.addEventListener("touchend", (event) => {
+  touchEndY = event.changedTouches[0].clientY;
+
+  if (touchStartY - touchEndY > 100) {
+    //아래에서 위로
+    nextMonth();
+  } else if (touchEndY - touchStartY > 100) {
+    //위에서 아래로
+    previousMonth();
+  }
+});
